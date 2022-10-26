@@ -20,6 +20,7 @@ func TestCache(t *testing.T) {
 	ctx := context.Background()
 	key := "test"
 	value := "value"
+	c.Remove(ctx, key)
 	_, err := c.Get(ctx, key)
 	if !errors.Is(err, ErrorNil) {
 		t.Fatal("key exists")
@@ -34,5 +35,16 @@ func TestCache(t *testing.T) {
 	}
 	if res != value {
 		t.Fatal("not equal")
+	}
+	del, err := c.Remove(ctx, key)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if del != 1 {
+		t.Fatal("del != 1")
+	}
+	_, err = c.Get(ctx, key)
+	if !errors.Is(err, ErrorNil) {
+		t.Fatal("not removed")
 	}
 }

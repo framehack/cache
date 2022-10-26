@@ -54,3 +54,9 @@ func (c *Cache) Get(ctx context.Context, key string) (string, error) {
 	}
 	return result, err
 }
+
+// Remove remove value
+func (c *Cache) Remove(ctx context.Context, key string) (int64, error) {
+	cachekey := fmt.Sprintf("%s%s", c.conf.CachePrefix, key)
+	return c.redisclient.Del(ctx, cachekey).Result()
+}
